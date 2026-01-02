@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>關於獸甲子園參與始末 - 完整聲明</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 配色：深色沈澱感，搭配強調色 */
+            --primary: #64b5f6;      /* 亮藍色：理性、澄清 */
+            --accent: #ffb74d;       /* 橘黃色：警示、重點 */
+            --bg: #121212;           /* 深色背景 */
+            --card-bg: #1e1e1e;      /* 卡片背景 */
+            --text: #e0e0e0;         /* 主要文字 */
+            --text-muted: #a0a0a0;   /* 次要文字 */
+            --line-color: #333;      /* 時間軸線條 */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden; /* 防止水平捲動 */
+        }
+
+        /* --- Header 區塊 --- */
+        header {
+            height: 100vh; /* 滿版高度 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            /* 背景圖 + 遮罩 */
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1504198266287-1659872e6590?auto=format&fit=crop&q=80'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* 視差滾動效果 */
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-top: 20px;
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+        }
+
+        /* 向下捲動提示動畫 */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            color: var(--primary);
+            animation: bounce 2s infinite;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* --- 前言區塊 --- */
+        .intro {
+            max-width: 800px;
+            margin: 5rem auto;
+            padding: 2.5rem;
+            background: linear-gradient(145deg, #1e1e1e, #252525);
+            border-left: 5px solid var(--primary);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            
+            /* 初始隱藏，透過 JS 觸發顯示 */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        /* --- 時間軸主結構 --- */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px 20px;
+        }
+
+        /* 中央線條 */
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--line-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+
+        /* --- 時間軸項目 (左右交錯) --- */
+        .container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            
+            /* 初始隱藏動畫狀態 */
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .container.left { left: 0; text-align: right; }
+        .container.right { left: 50%; text-align: left; }
+
+        /* 時間軸上的圓點 */
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: var(--bg);
+            border: 4px solid var(--primary);
+            top: 25px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        .container.right::after {
+            left: -10px; /* 修正右側圓點位置 */
+        }
+
+        /* 內容卡片 */
+        .content {
+            padding: 25px 30px;
+            background-color: var(--card-bg);
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .container.left .content { text-align: left; /* 內容強制靠左讀取較順 */ }
+
+        /* 日期標籤 */
+        .date-badge {
+            display: inline-block;
+            background-color: var(--primary);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(100, 181, 246, 0.3);
+        }
+
+        h3 { margin-bottom: 10px; color: #fff; }
+        
+        .highlight { color: var(--primary); font-weight: bold; }
+        .warning { color: var(--accent); }
+        .text-small { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- 特殊元件：摺疊選單 --- */
+        details {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            cursor: pointer;
+            border: 1px solid #333;
+            transition: background 0.3s;
+        }
+        details:hover { background: rgba(255, 255, 255, 0.06); }
+        
+        summary {
+            font-weight: bold;
+            color: var(--primary);
+            outline: none;
+            list-style: none; /* 隱藏預設箭頭 */
+            display: flex;
+            align-items: center;
+        }
+        summary::after { content: ' ▼'; font-size: 0.8em; margin-left: 10px; }
+        details[open] summary::after { content: ' ▲'; }
+
+        blockquote {
+            font-style: italic;
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #ccc;
+            white-space: pre-line;
+            line-height: 1.6;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+        }
+
+        /* --- 表格樣式 --- */
+        .issue-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .issue-table th, .issue-table td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: left;
+        }
+        .issue-table th { background-color: #333; color: var(--primary); }
+        .issue-table tr:hover { background-color: rgba(255,255,255,0.05); }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 5rem 2rem;
+            background-color: #000;
+            margin-top: 4rem;
+            border-top: 1px solid #222;
+        }
+
+        .final-quote {
+            font-size: 1.4rem;
+            color: #fff;
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+            font-weight: 300;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* --- 動畫 Keyframes --- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* JS控制的顯示狀態 */
+        .visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* --- RWD 手機版調整 --- */
+        @media screen and (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .timeline::after { left: 31px; }
+            .container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .container::after { left: 21px; }
+            .container.left, .container.right { left: 0%; text-align: left; }
+            .container.left .content { text-align: left; }
+            .intro { margin: 3rem 1.5rem; padding: 1.5rem; }
+            
+            /* 手機版調整圓點連接線 */
+            .container.right::after { left: 21px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>獸甲子園參與始末</h1>
+        <div class="subtitle">
+            <p>經過這幾天的沉澱，我想還原這段期間的所見所聞。<br>以下內容以我能確定的事實與自身感受為範圍。</p>
+        </div>
+        <div class="scroll-hint" onclick="document.getElementById('intro-block').scrollIntoView({behavior: 'smooth'})">
+            ▼ 向下捲動查看時間軸
+        </div>
+    </header>
+
+    <div class="intro" id="intro-block">
+        <h3><span style="border-bottom: 2px solid var(--primary);">前言</span></h3>
+        <p style="margin-top: 15px;">早安。這份說明並非為了攻擊，而是為了釐清脈絡。我希望能將籌備過程中，關於企劃執行、溝通落差以及現場決策的真實情況，做一次完整的梳理。</p>
+    </div>
+
+    <div class="timeline">
+        
+        <div class="container left">
+            <div class="content">
+                <span class="date-badge">2024年 5月</span>
+                <h3>初期合作與定位</h3>
+                <p>當時冰羽貓透過伊爾聯繫，初期設定目標為 300-500 人。</p>
+                <ul style="margin-left: 20px; margin-top: 10px; color: var(--text-muted);">
+                    <li><strong>我的角色：</strong>設定為「協助者」與「嘉賓」。</li>
+                    <li><strong>交換條件：</strong>負責設計聯名外套，換取「野球部聯名」形式的調酒酒會。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <span class="date-badge">2024年 9月</span>
+                <h3>主動介入企劃</h3>
+                <p>因觀察到報名人數低迷，且活動內容對一般參加者吸引力不足，我主動撰寫了 <span class="highlight">《滿貫挑戰》</span> 完整企劃 (9/13)。</p>
+                <p class="text-small" style="margin-top: 10px;">內容包含小遊戲規則、獎品兌換、繪師接洽等。同時我主動聯繫獸 V 開台宣傳。</p>
+                <div style="margin-top: 10px; padding: 8px; background: rgba(255, 183, 77, 0.1); border-radius: 4px;">
+                    <small class="warning">⚠️ 澄清：當時群組僅有三人，企劃皆經冰羽貓確認同意後執行，並非「事後才決定」。</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <span class="date-badge">2024年 10月3日</span>
+                <h3 class="warning">溝通爆發點</h3>
+                <p>因企劃長期未獲定案，且一人承擔賽評、演出、美工、參賽者等絕大多數聯繫工作，我在群組表達了強烈不滿。</p>
+                
+                <details>
+                    <summary>點擊展開：當時群組內的關鍵發言錄</summary>
+                    <blockquote>
+                        「我從 5 點等到現在也沒有任何消息...」<br><br>
+                        「我覺得我一個人做了很多超出我本份的事情... 我會答應合作是因為我希望能夠把棒球這個 IP 做好。」<br><br>
+                        「我感覺為了這個活動快要把我多年來累積下來的人情人脈都消耗完了... 甚至是棒球隊參加者都是我找的。」<br><br>
+                        「試想，如果大家知道活動主辦是誰，參加人數可能會更不樂觀。」
+                    </blockquote>
+                    <p class="text-small"><strong>結果：</strong>在此之後，冰羽貓才將支援人員（亞瑠、通通、品邦）邀入，活動規劃始步上軌道。</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <span class="date-badge">2024年 11月</span>
+                <h3>群組改名爭議</h3>
+                <p>冰羽貓將群組改名為「獸甲子園執行委員會」。</p>
+                <p>其當下說法是：「不改群組名我都會看錯群組」，此舉僅為避免混淆，與後來對外宣稱的「委員會體制」說法有出入。</p>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <span class="date-badge">2024年 12月</span>
+                <h3>執行細節的忽視</h3>
+                <p>隨著活動逼近，我多次提出具體修正建議，但多數未獲採納或回應。</p>
+                <table class="issue-table">
+                    <thead>
+                        <tr>
+                            <th width="20%">日期</th>
+                            <th>事項與建議</th>
+                            <th width="30%">結果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12/10</td>
+                            <td>建議八熊住宿與報名應有補貼</td>
+                            <td>未有下文</td>
+                        </tr>
+                        <tr>
+                            <td>12/20</td>
+                            <td>發現被排除在工作人員會議外</td>
+                            <td>被質疑為何沒開會(但我當時未進群)</td>
+                        </tr>
+                        <tr>
+                            <td>12/24</td>
+                            <td>表演場地紅土/草地爭議</td>
+                            <td>反應後才修正回草地</td>
+                        </tr>
+                        <tr>
+                            <td>12/25</td>
+                            <td>《滿貫挑戰》獎勵邏輯矛盾</td>
+                            <td>未有下文</td>
+                        </tr>
+                        <tr>
+                            <td>12/26</td>
+                            <td>建議修正閉幕流程 (入場>頒獎>抽獎)</td>
+                            <td>未有下文 (導致後來現場空等)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <span class="date-badge">12/27 活動首日</span>
+                <h3>現場危機處理：禁帶外食風波</h3>
+                <p>活動現場發生工作人員吼人、缺水狀況。晚會時更一度「禁帶外食」。</p>
+                <div style="margin-top:15px; border-left: 3px solid var(--primary); padding-left: 10px;">
+                    <strong>我的處置：</strong><br>
+                    1. 貓介詢問後，我親自帶人找冰羽貓協調，最終改為「坐邊邊吃」。<br>
+                    2. 當晚酒會結束後，親自聯繫並登門向受影響者道歉，嘗試止血。
+                </div>
+            </div>
+        </div>
+
+        <div class="container left">
+            <div class="content">
+                <span class="date-badge">12/28 活動次日</span>
+                <h3>閉幕式流程失控</h3>
+                <p>閉幕順序未依照我事前建議的邏輯執行，而是維持「抽獎 → 入場 → 頒獎」，導致球員必須在後台枯等 40 分鐘。</p>
+                <p class="warning" style="margin-top: 10px;">我在現場已盡力協調，但因無最終決策權，只能請示主辦。最終調整後的順序仍無法解決選手乾等的問題。</p>
+            </div>
+        </div>
+
+        <div class="container right">
+            <div class="content">
+                <span class="date-badge">12/29 最終</span>
+                <h3>心寒的結尾</h3>
+                <p>活動結束隔天一早，我收到冰羽貓的訊息：</p>
+                <h2 style="text-align: center; margin: 30px 0; color: #fff;">「你在不滿活動什麼？」</h2>
+                <p>當下，我覺得我的心已經涼了。</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="final-quote">
+            "我會答應合作是因為我希望能夠把棒球這個 IP 做好，這是我喜歡的元素，我不希望這個元素被弄爛了。"
+        </div>
+        <p style="color: #666; font-size: 0.8rem;">2026/01/02 - 完整說明聲明</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // 當元件出現 15% 時觸發
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // 動畫只跑一次
+                    }
+                });
+            }, observerOptions);
+
+            const animateElements = document.querySelectorAll('.intro, .container');
+            animateElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
